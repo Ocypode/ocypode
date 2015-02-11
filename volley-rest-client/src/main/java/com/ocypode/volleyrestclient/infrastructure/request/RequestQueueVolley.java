@@ -7,23 +7,34 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.Volley;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 /**
  * Caching request programmatically   
  * http://stackoverflow.com/questions/16781244/android-volley-jsonobjectrequest-caching
  * @author Jairo Junior - jairobjunior@gmail.com
  */
-@Singleton
 public class RequestQueueVolley {
 
 	public static final String TAG = "VolleyPatterns";
 
+    private static RequestQueueVolley mInstance;
+
 	private RequestQueue mRequestQueue;
 
-	@Inject
 	private Context mContext;
+
+    private RequestQueueVolley(Context context) {
+        mContext = context;
+    }
+
+    public static RequestQueueVolley getInstance(Context context) {
+        synchronized (context) {
+            if (mInstance == null) {
+                mInstance = new RequestQueueVolley(context);
+            }
+            return mInstance;
+        }
+    }
 
 	public RequestQueue getRequestQueue() {
 		// lazy initialize the request queue, the queue instance will be

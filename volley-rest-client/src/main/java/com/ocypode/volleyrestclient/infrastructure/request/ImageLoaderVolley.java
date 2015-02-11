@@ -1,7 +1,5 @@
 package com.ocypode.volleyrestclient.infrastructure.request;
 
-import java.io.File;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,28 +7,41 @@ import android.support.v4.util.LruCache;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageLoader.ImageCache;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.ocypode.volleyrestclient.infrastructure.cache.BufferedDiskBasedCache;
 import com.ocypode.volleyrestclient.utility.bitmap.BitmapUtil;
 
+import java.io.File;
+
 /**
  * If we start having performance problems: http://stackoverflow.com/questions/20916478/performance-issue-with-volleys-diskbasedcache
- * This class is @Singleton, be aware when you use {@link newImageLoaderInMemory}
+ * This class is a Singleton, be aware when you use {@link newImageLoaderInMemory}
  * @author jairobjunior@gmail.com
  */
-@Singleton
 public class ImageLoaderVolley {
 
 	/** Default maximum disk usage in bytes. 10MB */
     private static final int DEFAULT_DISK_USAGE_BYTES = 10 * 1024 * 1024;
-    
-	@Inject
-	protected Context mContext;
+
+    private static ImageLoaderVolley mInstance;
+
+    protected Context mContext;
 	
-	@Inject
 	private RequestQueueVolley mRequestQueueVolley;
-	
+
+    private ImageLoaderVolley(Context context, RequestQueueVolley requestQueueVolley) {
+        mContext = context;
+        mRequestQueueVolley = requestQueueVolley;
+    }
+
+    public static ImageLoaderVolley getInstance(Context context, RequestQueueVolley requestQueueVolley) {
+        synchronized (context) {
+            if (mInstance == null) {
+                mInstance = new ImageLoaderVolley(context, requestQueueVolley);
+            }
+            return mInstance;
+        }
+    }
+
 	/**
 	 * Memorycache is always faster than DiskCache. Check it our for yourself. {@link #newImageLoaderInMemory()}
 	 * @return
