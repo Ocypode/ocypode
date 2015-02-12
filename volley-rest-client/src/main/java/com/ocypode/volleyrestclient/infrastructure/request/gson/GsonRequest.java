@@ -2,6 +2,7 @@ package com.ocypode.volleyrestclient.infrastructure.request.gson;
 
 import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.json.JSONObject;
@@ -34,35 +35,52 @@ public class GsonRequest<T> extends Request<T> {
 	private final Gson gson;
 	private final Class<T> clazz;
 	private final Map<String, String> headers;
+    private final Map<String, String> params;
 	private final Listener<T> listener;
 	private final JSONObject jsonObject;
 	
 	public GsonRequest(int method, String url, Class<T> clazz,
 			final Handler<?> handler, ListenerCatchingException<T> listener) {
-		this(method, url, clazz, null, RequestHelper.getHeaders(), 
+		this(method, url, clazz, null, RequestHelper.getHeaders(), RequestHelper.getParams(),
 				RequestHelper.createResponseListener(handler, listener), 
 				RequestHelper.createErrorResponseListener(handler));
 	}
 	
 	public GsonRequest(int method, String url, JSONObject jsonObject, Class<T> clazz,
 			final Handler<?> handler, ListenerCatchingException<T> listener) {
-		this(method, url, clazz, jsonObject, RequestHelper.getHeaders(), 
+		this(method, url, clazz, jsonObject, RequestHelper.getHeaders(), RequestHelper.getParams(),
 				RequestHelper.createResponseListener(handler, listener), 
 				RequestHelper.createErrorResponseListener(handler));
 	}
 
+    public GsonRequest(int method, String url, Class<T> clazz,
+                       final Handler<?> handler, Map<String, String> headers, ListenerCatchingException<T> listener) {
+        this(method, url, clazz, null, headers, null,
+                RequestHelper.createResponseListener(handler, listener),
+                RequestHelper.createErrorResponseListener(handler));
+    }
+
+    public GsonRequest(int method, String url, Class<T> clazz,
+                       final Handler<?> handler, Map<String, String> headers, Map<String, String> params, ListenerCatchingException<T> listener) {
+        this(method, url, clazz, null, headers, params,
+                RequestHelper.createResponseListener(handler, listener),
+                RequestHelper.createErrorResponseListener(handler));
+    }
+
+
 	private GsonRequest(int method, String url, Class<T> clazz, JSONObject jsonObject,
-			Map<String, String> headers, Listener<T> listener,
+			Map<String, String> headers, Map<String, String> params, Listener<T> listener,
 			ErrorListener errorListener) {
 		super(method, url, errorListener);
 
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		gsonBuilder.registerTypeAdapter(Timestamp.class,
 				new TimestampDeserializer());
-		gsonBuilder.setDateFormat("yyyy/MM/dd HH:mm:ss");
+		gsonBuilder.setDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		this.gson = gsonBuilder.create();
 		this.clazz = clazz;
 		this.headers = headers;
+        this.params = params;
 		this.listener = listener;
 		
 		this.jsonObject = jsonObject;
@@ -72,6 +90,12 @@ public class GsonRequest<T> extends Request<T> {
 	public Map<String, String> getHeaders() throws AuthFailureError {
 		return headers != null ? headers : super.getHeaders();
 	}
+
+
+    @Override
+    public Map<String, String> getParams() throws AuthFailureError {
+        return params != null ? params : super.getParams();
+    }
 
 	@Override
 	protected void deliverResponse(T response) {

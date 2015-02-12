@@ -1,5 +1,6 @@
 package com.ocypode.volleyrestclient.infrastructure.request;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Cache;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
@@ -98,8 +99,12 @@ public class RequestHelper {
 	public static Map<String, String> getHeaders() {
         HashMap headers = new HashMap<String, String>();
 
-        headers.put("Referer", "local.dev");
-
         return headers;
 	}
+
+    public static Map<String, String> getParams() {
+        Map<String, String> pars = new HashMap<>();
+
+        return pars;
+    }
 }
