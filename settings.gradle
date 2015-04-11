@@ -1,1 +1,1 @@
-include ':app', ':volley-rest-client'
+include ':app', ':volley-rest-client', ':ocypode-core', ':ocypode-application'

@@ -1,6 +1,5 @@
 package com.ocypode.volleyrestclient.infrastructure.request;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Cache;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;

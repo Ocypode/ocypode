@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ImageViewVolley">
+        <attr name="spinnerSize">
+            <flag name="small" value="0" />
+            <flag name="normal" value="1" />
+            <flag name="large" value="2" />
+        </attr>
+        <attr name="spinnerColor">
+            <flag name="white" value="0" />
+            <flag name="black" value="1" />
+        </attr>
+        <attr name="spinnerHide" format="boolean" />
+    </declare-styleable>
+</resources>
