@@ -15,13 +15,13 @@ import com.android.volley.toolbox.Volley;
  */
 public class RequestQueueVolley {
 
-	public static final String TAG = "VolleyPatterns";
+    public static final String TAG = "VolleyPatterns";
 
     private static RequestQueueVolley mInstance;
 
-	private RequestQueue mRequestQueue;
+    private RequestQueue mRequestQueue;
 
-	private Context mContext;
+    private Context mContext;
 
     private RequestQueueVolley(Context context) {
         mContext = context;
@@ -36,35 +36,35 @@ public class RequestQueueVolley {
         }
     }
 
-	public RequestQueue getRequestQueue() {
-		// lazy initialize the request queue, the queue instance will be
-		// created when it is accessed for the first time
-		if (mRequestQueue == null) {
-			mRequestQueue = Volley.newRequestQueue(mContext);
-		}
+    public RequestQueue getRequestQueue() {
+        // lazy initialize the request queue, the queue instance will be
+        // created when it is accessed for the first time
+        if (mRequestQueue == null) {
+            mRequestQueue = Volley.newRequestQueue(mContext);
+        }
 
-		return mRequestQueue;
-	}
+        return mRequestQueue;
+    }
 
-	public <T> void addToRequestQueue(Request<T> request, String tag) {
-		// set the default tag if tag is empty
-		request.setTag(TextUtils.isEmpty(tag) ? TAG : tag);
+    public <T> void addToRequestQueue(Request<T> request, String tag) {
+        // set the default tag if tag is empty
+        request.setTag(TextUtils.isEmpty(tag) ? TAG : tag);
 
-		VolleyLog.d("Adding request to queue: %s", request.getUrl());
+        VolleyLog.d("Adding request to queue: %s", request.getUrl());
 
-		getRequestQueue().add(request);
-	}
+        getRequestQueue().add(request);
+    }
 
-	public <T> void addToRequestQueue(Request<T> request) {
-		// set the default tag if tag is empty
-		request.setTag(TAG);
+    public <T> void addToRequestQueue(Request<T> request) {
+        // set the default tag if tag is empty
+        request.setTag(TAG);
 
-		getRequestQueue().add(request);
-	}
+        getRequestQueue().add(request);
+    }
 
-	public void cancelPendingRequests(Object tag) {
-		if (mRequestQueue != null) {
-			mRequestQueue.cancelAll(tag);
-		}
-	}
+    public void cancelPendingRequests(Object tag) {
+        if (mRequestQueue != null) {
+            mRequestQueue.cancelAll(tag);
+        }
+    }
 }
