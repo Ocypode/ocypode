@@ -29,6 +29,8 @@ import android.util.SparseIntArray;
 import android.util.TypedValue;
 import android.widget.TextView;
 
+import roboguice.RoboGuice;
+
 public class AutoResizeTextView extends TextView {
 	private interface SizeTester {
 		/**
@@ -41,7 +43,7 @@ public class AutoResizeTextView extends TextView {
 		 *         text, it takes less space than {@code availableSpace}, > 0
 		 *         otherwise
 		 */
-		public int onTestSize(int suggestedSize, RectF availableSpace);
+		int onTestSize(int suggestedSize, RectF availableSpace);
 	}
 
 	private RectF mTextRect = new RectF();
@@ -83,7 +85,14 @@ public class AutoResizeTextView extends TextView {
 		initialize();
 	}
 
+	private void initializeRoboGuiceInject() {
+		RoboGuice.getInjector(getContext()).injectMembers(this);
+		RoboGuice.getInjector(getContext()).injectViewMembers(this);
+	}
+
 	private void initialize() {
+		initializeRoboGuiceInject();
+
 		mPaint = new TextPaint(getPaint());
 		mMaxTextSize = getTextSize();
 		mAvailableSpaceRect = new RectF();
@@ -98,14 +107,14 @@ public class AutoResizeTextView extends TextView {
 	@Override
 	public void setText(final CharSequence text, BufferType type) {
 		super.setText(text, type);
-		adjustTextSize(text.toString());
+		adjustTextSize();
 	}
 
 	@Override
 	public void setTextSize(float size) {
 		mMaxTextSize = size;
 		mTextCachedSizes.clear();
-		adjustTextSize(getText().toString());
+		adjustTextSize();
 	}
 
 	@Override
@@ -156,7 +165,7 @@ public class AutoResizeTextView extends TextView {
 		mMaxTextSize = TypedValue.applyDimension(unit, size,
 				r.getDisplayMetrics());
 		mTextCachedSizes.clear();
-		adjustTextSize(getText().toString());
+		adjustTextSize();
 	}
 
 	@Override
@@ -177,10 +186,10 @@ public class AutoResizeTextView extends TextView {
 	}
 
 	private void reAdjust() {
-		adjustTextSize(getText().toString());
+		adjustTextSize();
 	}
 
-	private void adjustTextSize(String string) {
+	private void adjustTextSize() {
 		if (!mInitiallized) {
 			return;
 		}
@@ -248,7 +257,7 @@ public class AutoResizeTextView extends TextView {
 	public void enableSizeCache(boolean enable) {
 		mEnableSizeCache = enable;
 		mTextCachedSizes.clear();
-		adjustTextSize(getText().toString());
+		adjustTextSize();
 	}
 
 	private int efficientTextSizeSearch(int start, int end,
@@ -257,7 +266,7 @@ public class AutoResizeTextView extends TextView {
 			return binarySearch(start, end, sizeTester, availableSpace);
 		}
 		String text = getText().toString();
-		int key = text == null ? 0 : text.length();
+		int key = text.length();
 		int size = mTextCachedSizes.get(key);
 		if (size != 0) {
 			return size;
@@ -272,7 +281,7 @@ public class AutoResizeTextView extends TextView {
 		int lastBest = start;
 		int lo = start;
 		int hi = end - 1;
-		int mid = 0;
+		int mid;
 		while (lo <= hi) {
 			mid = (lo + hi) >>> 1;
 			int midValCmp = sizeTester.onTestSize(mid, availableSpace);

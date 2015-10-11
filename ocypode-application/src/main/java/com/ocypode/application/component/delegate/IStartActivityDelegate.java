@@ -42,8 +42,8 @@ public interface IStartActivityDelegate {
 	void launchSubActivity(Class<?> subActivityClass,
                            IResultCallbackActivity callback);
 	
-	public void launchSubActivity(Intent i,
-                                  IResultCallbackActivity callback);
+	void launchSubActivity(Intent i,
+						   IResultCallbackActivity callback);
 
 	void onActivityResult(int requestCode, int resultCode, Intent data);
 	

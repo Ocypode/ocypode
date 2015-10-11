@@ -17,6 +17,8 @@ package com.ocypode.volleyrestclient.infrastructure.cache;
  */
 
 import android.os.SystemClock;
+import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.android.volley.Cache;
 import com.android.volley.VolleyLog;
@@ -158,9 +160,7 @@ public class BufferedDiskBasedCache implements Cache {
                 entry.size = file.length();
                 putEntry(entry.key, entry);
             } catch (IOException e) {
-                if (file != null) {
-                   file.delete();
-                }
+                file.delete();
             } finally {
                 try {
                     if (fis != null) {
@@ -205,6 +205,7 @@ public class BufferedDiskBasedCache implements Cache {
             putEntry(key, e);
             return;
         } catch (IOException e) {
+            Log.e("BufferedDiskBasedCache", "put", e);
         }
         boolean deleted = file.delete();
         if (!deleted) {
@@ -449,7 +450,7 @@ public class BufferedDiskBasedCache implements Cache {
         }
 
         @Override
-        public int read(byte[] buffer, int offset, int count) throws IOException {
+        public int read(@NonNull byte[] buffer, int offset, int count) throws IOException {
             int result = super.read(buffer, offset, count);
             if (result != -1) {
                 bytesRead += result;

@@ -1,6 +1,5 @@
 package com.ocypode.application.activity.robo;
 
-import roboguice.activity.RoboActivity;
 import android.app.Service;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -10,6 +9,8 @@ import com.ocypode.application.activity.IResultCallbackActivity;
 import com.ocypode.application.component.delegate.IStartActivityDelegate;
 import com.ocypode.application.component.delegate.StartActivityDelegate;
 import com.ocypode.application.component.delegate.adaptor.StartActivityAdaptor;
+
+import roboguice.activity.RoboActivity;
 
 
 abstract public class AbstractRoboActivity extends RoboActivity implements IStartActivityDelegate {

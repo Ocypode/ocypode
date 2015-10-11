@@ -9,10 +9,23 @@ import android.graphics.Shader.TileMode;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
+import roboguice.RoboGuice;
+
 public class CircleImageView extends ImageView {
 
 	public CircleImageView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+
+		if (isInEditMode()) {
+			return;
+		}
+
+		initializeRoboGuiceInject();
+	}
+
+	private void initializeRoboGuiceInject() {
+		RoboGuice.getInjector(getContext()).injectMembers(this);
+		RoboGuice.getInjector(getContext()).injectViewMembers(this);
 	}
 
 	@Override

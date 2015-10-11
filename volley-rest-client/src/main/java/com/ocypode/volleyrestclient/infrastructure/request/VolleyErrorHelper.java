@@ -5,7 +5,6 @@ import android.content.Context;
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkError;
 import com.android.volley.NetworkResponse;
-import com.android.volley.NoConnectionError;
 import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
@@ -41,7 +40,7 @@ public class VolleyErrorHelper {
 	 * @return
 	 */
 	private static boolean isNetworkProblem(Object error) {
-        return (error instanceof NetworkError) || (error instanceof NoConnectionError);
+        return (error instanceof NetworkError);
     }
 
     /**

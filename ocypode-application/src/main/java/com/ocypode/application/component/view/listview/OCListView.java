@@ -9,6 +9,8 @@ import android.widget.ListView;
 
 import com.ocypode.application.R;
 
+import roboguice.RoboGuice;
+
 public class OCListView extends ListView {
 
 	public OCListView(Context context, AttributeSet attrs) {
@@ -18,6 +20,8 @@ public class OCListView extends ListView {
 			return;
 		}
 
+		initializeRoboGuiceInject();
+
 		TypedArray styledAttrs = context.obtainStyledAttributes(attrs, R.styleable.OCLisView);
 		int layoutHeaderResource = styledAttrs.getResourceId(R.styleable.OCLisView_layout_header_embedded, 0);
 		int layoutFooterResource = styledAttrs.getResourceId(R.styleable.OCLisView_layout_footer_embedded, 0);
@@ -25,6 +29,11 @@ public class OCListView extends ListView {
 		
 		embedHeader(layoutHeaderResource);
 		embedFooter(layoutFooterResource);
+	}
+
+	private void initializeRoboGuiceInject() {
+		RoboGuice.getInjector(getContext()).injectMembers(this);
+		RoboGuice.getInjector(getContext()).injectViewMembers(this);
 	}
 
 	private void embedHeader(int layoutHeaderResource) {

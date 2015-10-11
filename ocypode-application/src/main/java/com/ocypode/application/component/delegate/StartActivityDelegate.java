@@ -28,7 +28,7 @@ public class StartActivityDelegate implements IStartActivityDelegate {
 	
 	public StartActivityDelegate(IStartActivityAdaptor startActivityAdaptor) {
 		mStartActivityAdaptor = startActivityAdaptor;
-		mCallbackMap = new SparseArray<IResultCallbackActivity>();
+		mCallbackMap = new SparseArray<>();
 	}
 
 	@Override

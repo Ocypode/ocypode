@@ -120,12 +120,12 @@ abstract public class AbstractRoboFragmentActivity extends RoboFragmentActivity 
 		mStartActivityDelegate.stopService(cl);
 	}
 	
-	protected void addFragment(int fragmentId, Fragment fragment) {
+	protected void replaceFragment(int fragmentId, Fragment fragment) {
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();		
 		transaction.replace(fragmentId, fragment).commit();
 	}
 	
-	protected void addFragment(int fragmentId, Fragment fragment, String tag) {
+	protected void replaceFragment(int fragmentId, Fragment fragment, String tag) {
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 	    ft.replace(fragmentId, fragment, tag);
 	    ft.commit();
@@ -135,11 +135,5 @@ abstract public class AbstractRoboFragmentActivity extends RoboFragmentActivity 
 	public void bindService(Service service, Class<?> serviceClass,
 			ServiceConnection serviceConnection) {
 		mStartActivityDelegate.bindService(service, serviceClass, serviceConnection);
-	}
-
-	public void hideActionBar() {
-		getActionBar().setDisplayShowTitleEnabled(false);
-		getActionBar().setDisplayShowHomeEnabled(false);
-		getActionBar().hide();
 	}
 }

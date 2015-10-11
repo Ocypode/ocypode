@@ -1,10 +1,13 @@
 package com.ocypode.application.component.view.listview;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.ListView;
+
+import roboguice.RoboGuice;
 
 public class LockableListView extends ListView implements OnPageChangeListener{
 	private boolean isLocked = false;
@@ -12,7 +15,16 @@ public class LockableListView extends ListView implements OnPageChangeListener{
 	
 	public LockableListView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		
+
+		if (isInEditMode()) {
+			return;
+		}
+		initializeRoboGuiceInject();
+	}
+
+	private void initializeRoboGuiceInject() {
+		RoboGuice.getInjector(getContext()).injectMembers(this);
+		RoboGuice.getInjector(getContext()).injectViewMembers(this);
 	}
 
 	public void setLock(boolean lock){
@@ -20,7 +32,7 @@ public class LockableListView extends ListView implements OnPageChangeListener{
 	}
 	
 	@Override
-	public boolean onInterceptTouchEvent(MotionEvent ev) {
+	public boolean onInterceptTouchEvent(@NonNull MotionEvent ev) {
 		if(isLocked){
 			return false;
 		}else{

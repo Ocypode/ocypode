@@ -18,7 +18,7 @@ import java.util.Map;
 public class RequestHelper {
 
 	public interface ListenerCatchingException<T> {
-        public void onResponse(T response) throws JSONException;
+        void onResponse(T response) throws JSONException;
     }
 	
 	public static ErrorListener createErrorResponseListener(final Handler<?> handler) {
@@ -69,7 +69,7 @@ public class RequestHelper {
 
 	    Map<String, String> headers = response.headers;
 	    long serverDate = 0;
-	    String serverEtag = null;
+	    String serverEtag;
 	    String headerValue;
 
 	    headerValue = headers.get("Date");

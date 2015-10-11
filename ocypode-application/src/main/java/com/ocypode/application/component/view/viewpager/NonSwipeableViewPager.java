@@ -5,6 +5,8 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
+import roboguice.RoboGuice;
+
 /**
  * Created by macksuel on 4/7/15.
  */
@@ -16,6 +18,8 @@ public class NonSwipeableViewPager extends ViewPager {
         if (isInEditMode()) {
             return;
         }
+
+        initializeRoboGuiceInject();
     }
 
     public NonSwipeableViewPager(Context context, AttributeSet attrs) {
@@ -24,6 +28,13 @@ public class NonSwipeableViewPager extends ViewPager {
         if (isInEditMode()) {
             return;
         }
+
+        initializeRoboGuiceInject();
+    }
+
+    private void initializeRoboGuiceInject() {
+        RoboGuice.getInjector(getContext()).injectMembers(this);
+        RoboGuice.getInjector(getContext()).injectViewMembers(this);
     }
 
     @Override

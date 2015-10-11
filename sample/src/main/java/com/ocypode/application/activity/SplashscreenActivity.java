@@ -12,7 +12,7 @@ import roboguice.inject.ContentView;
  * Created by macksuel on 4/12/15.
  */
 @ContentView(R.layout.activity_splashscreen)
-public class SplashScreen extends AbstractRoboActivity {
+public class SplashscreenActivity extends AbstractRoboActivity {
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -22,6 +22,7 @@ public class SplashScreen extends AbstractRoboActivity {
             @Override
             public void run() {
                 pushActivity(MainActivity.class);
+                SplashscreenActivity.this.finish();
             }
         }, 2000);
     }

@@ -1,8 +1,11 @@
 <resources>
 
+    <color name="background_color">#e5e5e5</color>
+
     <!-- Base application theme. -->
     <style name="AppTheme" parent="android:style/Theme.Holo.Light">
         <!-- Customize your theme here. -->
+        <item name="android:windowBackground">@color/background_color</item>
     </style>
 
 </resources>

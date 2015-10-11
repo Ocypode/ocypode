@@ -9,7 +9,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".application.activity.SplashScreen"
+            android:name=".application.activity.SplashscreenActivity"
             android:label="@string/title_activity_main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,7 +23,7 @@
         <!--Guice configuration-->
         <meta-data
             android:name="roboguice.annotations.packages"
-            android:value="com.ocypode" />
+            android:value="com.ocypode,testcom.ocypode" />
         <meta-data
             android:name="roboguice.modules"
             android:value="com.ocypode.application.VolleyFactoryModule" />

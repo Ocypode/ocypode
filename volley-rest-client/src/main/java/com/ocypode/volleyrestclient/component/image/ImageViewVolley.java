@@ -35,9 +35,6 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageLoader.ImageContainer;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.ocypode.volleyrestclient.R;
-
-//TODO: Move to a Ocypode Volley module
-
 /**
  * Handles fetching an image from a URL as well as the life-cycle of the
  * associated request.
@@ -72,6 +69,8 @@ public class ImageViewVolley extends ImageView {
 	
 	private boolean isCircle = false;
 
+    private Animation mAnimation;
+
 	public ImageViewVolley(Context context) {
 		this(context, null);
 	}
@@ -100,6 +99,8 @@ public class ImageViewVolley extends ImageView {
 		mSpinnerDrawable = spinnerColorSize[spinnerColor][spinnerSize];
 		
 		a.recycle();
+
+        mAnimation = createRotateAnimation();
 	}
 
 	/**
@@ -118,15 +119,16 @@ public class ImageViewVolley extends ImageView {
 	 *            ImageLoader that will be used to make the request.
 	 */
 	public void setImageUrl(String url, ImageLoader imageLoader) {
-		mUrl = url.replace(" ", "%20");
-		mImageLoader = imageLoader;
-		// The URL has potentially changed. See if we need to load it.
-		loadImageIfNecessary(false);
+        setImageUrl(url, imageLoader, false);
 	}
 	
 	public void setImageUrl(String url, ImageLoader imageLoader, boolean isCircle) {
 		this.isCircle = isCircle;
-		setImageUrl(url, imageLoader);
+
+        mUrl = url.replace(" ", "%20");
+        mImageLoader = imageLoader;
+        // The URL has potentially changed. See if we need to load it.
+        loadImageIfNecessary(false);
 	}
 
 	/**
@@ -157,7 +159,7 @@ public class ImageViewVolley extends ImageView {
 
 		boolean wrapWidth = false, wrapHeight = false;
 		if (getLayoutParams() != null) {
-			wrapWidth = getLayoutParams().width == LayoutParams.WRAP_CONTENT;
+            wrapWidth = getLayoutParams().width == LayoutParams.WRAP_CONTENT;
 			wrapHeight = getLayoutParams().height == LayoutParams.WRAP_CONTENT;
 		}
 
@@ -234,28 +236,27 @@ public class ImageViewVolley extends ImageView {
 						}
 
 						if (response.getBitmap() != null) {
-							stopAnimation();
-							
-							if (isCircle) {
-								Bitmap bitmap = response.getBitmap();
-								
-								final Bitmap outputBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Config.ARGB_8888);
+                            if (isCircle) {
+                                Bitmap bitmap = response.getBitmap();
 
-								final Path path = new Path();
-								path.addCircle((float) (bitmap.getWidth() / 2), (float) (bitmap.getHeight() / 2), (float) Math.min(bitmap.getWidth(), (bitmap.getHeight() / 2)), Path.Direction.CCW);
+                                final Bitmap outputBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Config.ARGB_8888);
 
-								final Canvas canvas = new Canvas(outputBitmap);
-								canvas.clipPath(path);
-								canvas.drawBitmap(response.getBitmap(), 0, 0, null);
-								
-								setImageBitmap(outputBitmap);
-							} else {
-								setImageBitmap(response.getBitmap());
-							}
+                                final Path path = new Path();
+                                path.addCircle((float) (bitmap.getWidth() / 2), (float) (bitmap.getHeight() / 2), (float) Math.min(bitmap.getWidth(), (bitmap.getHeight() / 2)), Path.Direction.CCW);
+
+                                final Canvas canvas = new Canvas(outputBitmap);
+                                canvas.clipPath(path);
+                                canvas.drawBitmap(response.getBitmap(), 0, 0, null);
+
+                                setImageBitmap(outputBitmap);
+                            } else {
+                                setImageBitmap(response.getBitmap());
+                            }
 						} else if (mDefaultImageId != 0) {
-							stopAnimation();
 							setImageResource(mDefaultImageId);
 						}
+
+                        stopAnimation();
 					}
 				}, maxWidth, maxHeight);
 		
@@ -285,7 +286,7 @@ public class ImageViewVolley extends ImageView {
 		if (getAnimation() == null && !mSpinnerHide) {
 			setImageResource(mSpinnerDrawable);
 			super.setScaleType(ScaleType.CENTER_INSIDE);
-			startAnimation(createRotateAnimation());			
+			startAnimation(mAnimation);
 		}
 	}
 	

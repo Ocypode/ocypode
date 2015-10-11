@@ -14,7 +14,7 @@ import java.io.File;
 
 /**
  * If we start having performance problems: http://stackoverflow.com/questions/20916478/performance-issue-with-volleys-diskbasedcache
- * This class is a Singleton, be aware when you use {@link newImageLoaderInMemory}
+ * This class is a Singleton, be aware when you use {@link /newImageLoaderInMemory}
  * @author jairobjunior@gmail.com
  */
 public class ImageLoaderVolley {
@@ -23,6 +23,8 @@ public class ImageLoaderVolley {
     private static final int DEFAULT_DISK_USAGE_BYTES = 10 * 1024 * 1024;
 
     private static ImageLoaderVolley mInstance;
+
+    private ImageLoader mImageLoaderDisk, mImageLoaderMemory;
 
     protected Context mContext;
 	
@@ -47,13 +49,20 @@ public class ImageLoaderVolley {
 	 * @return
 	 */
 	public ImageLoader newImageLoaderInDisk() {
-		return new ImageLoader(mRequestQueueVolley.getRequestQueue(),
-				new DiskBitmapCache(mContext.getCacheDir(), DEFAULT_DISK_USAGE_BYTES));
+		if (mImageLoaderDisk == null) {
+            mImageLoaderDisk = new ImageLoader(mRequestQueueVolley.getRequestQueue(),
+                    new DiskBitmapCache(mContext.getCacheDir(), DEFAULT_DISK_USAGE_BYTES));
+        }
+
+        return mImageLoaderDisk;
 	}
 	
 	public ImageLoader newImageLoaderInMemory() {
-		return new ImageLoader(mRequestQueueVolley.getRequestQueue(),
-				new BitmapLruCache());
+        if (mImageLoaderMemory == null) {
+            mImageLoaderMemory = new ImageLoader(mRequestQueueVolley.getRequestQueue(),
+                    new BitmapLruCache());
+        }
+		return mImageLoaderMemory;
 	}
 	
 	public static class DiskBitmapCache extends BufferedDiskBasedCache implements ImageCache {

@@ -1,10 +1,13 @@
 package com.ocypode.application.component.view.scrollview;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.ScrollView;
+
+import roboguice.RoboGuice;
 
 public class LockableScrollView extends ScrollView implements OnPageChangeListener{
 	private boolean isLocked = false;
@@ -14,6 +17,14 @@ public class LockableScrollView extends ScrollView implements OnPageChangeListen
 	public LockableScrollView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 
+		if (!isInEditMode()) {
+			initializeRoboGuiceInject();
+		}
+	}
+
+	private void initializeRoboGuiceInject() {
+		RoboGuice.getInjector(getContext()).injectMembers(this);
+		RoboGuice.getInjector(getContext()).injectViewMembers(this);
 	}
 
 	public void setLock(boolean lock){
@@ -21,7 +32,7 @@ public class LockableScrollView extends ScrollView implements OnPageChangeListen
 	}
 	
 	@Override
-	public boolean onInterceptTouchEvent(MotionEvent ev) {
+	public boolean onInterceptTouchEvent(@NonNull MotionEvent ev) {
 		if(isLocked){
 			return false;
 		}else{
