@@ -24,3 +24,17 @@ dependencies {
     compile 'com.google.code.gson:gson:2.3.+'
     compile 'com.android.support:appcompat-v7:23.0.1'
 }
+
+apply plugin: 'maven'
+
+version = '1.0.0'
+group = 'com.ocypode.volleyrestclient'
+
+uploadArchives {
+    repositories.mavenDeployer {
+        repository(url: 'file://' + rootProject.projectDir + '/repo/')
+        pom {
+            artifactId = 'volley-rest-client-lib'
+        }
+    }
+}
